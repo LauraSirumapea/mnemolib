@@ -43,60 +43,35 @@ Masalah utama:
 
 ---
 
-# 4. PEAS Specification
+# 4. Spesifikasi Formal PEAS
 
-## Performance Measure (P)
-
-| Parameter | Deskripsi |
-|-|-|
-| Search Accuracy | Kemampuan menemukan koleksi yang sesuai |
-| Result Relevance | Tingkat relevansi hasil pencarian |
-| Response Time | Kecepatan memberikan hasil |
-| Retrieval Success Rate | Keberhasilan menemukan buku target |
-| User Satisfaction | Kepuasan pengguna |
+| Komponen PEAS | Rincian Terukur & Spesifikasi |
+|---|---|
+| **Performance Measure** | • **Search Accuracy:** Kemampuan sistem menemukan buku/jurnal yang sesuai dengan informasi pengguna.<br><br>• **Relevance Score:** Tingkat kecocokan hasil pencarian berdasarkan informasi yang diberikan pengguna.<br><br>• **Response Time:** Waktu yang dibutuhkan sistem untuk menghasilkan kandidat buku.<br><br>• **Retrieval Success Rate:** Persentase keberhasilan menemukan koleksi yang sesuai.<br><br>• **Search Cost Minimization:** Meminimalkan biaya eksplorasi state pada proses pencarian. |
+| **Environment** | Koleksi buku dan jurnal perpustakaan, metadata buku (judul, penulis, kategori, tahun, sinopsis), database koleksi, serta input berupa potongan ingatan pengguna. |
+| **Actuators** | Output hasil pencarian buku/jurnal, ranking kandidat berdasarkan relevansi, rekomendasi koleksi, serta informasi metadata buku kepada pengguna. |
+| **Sensors** | Teks masukan pengguna berupa deskripsi buku, potongan cerita, karakter, lokasi, topik pembahasan, kata kunci, dan informasi metadata tambahan. |
 
 
-## Environment (E)
+## Klasifikasi Sifat Lingkungan (6 Dimensi Russell & Norvig)
 
-| Komponen | Deskripsi |
-|-|-|
-| Library Catalog | Database buku dan jurnal |
-| Book Metadata | Judul, penulis, tahun, kategori |
-| User Input | Informasi berdasarkan ingatan pengguna |
-| Collection Database | Koleksi perpustakaan |
+1. **Partially Observable**  
+   Sistem tidak mendapatkan informasi lengkap mengenai buku yang dicari karena pengguna hanya memberikan potongan ingatan atau informasi parsial.
 
+2. **Single Agent**  
+   MnemoLib bekerja sebagai satu intelligent agent yang melakukan proses pencarian dan rekomendasi buku.
 
-## Actuators (A)
+3. **Stochastic**  
+   Hasil pencarian dapat memiliki ketidakpastian karena input pengguna bersifat subjektif dan dapat menghasilkan beberapa kandidat buku.
 
-| Actuator | Fungsi |
-|-|-|
-| Display Results | Menampilkan kandidat buku |
-| Show Metadata | Menampilkan detail buku |
-| Rank Results | Mengurutkan kandidat |
-| Recommendation | Memberikan rekomendasi |
+4. **Sequential**  
+   Setiap proses eksplorasi kandidat buku memengaruhi langkah pencarian berikutnya.
 
+5. **Dynamic**  
+   Koleksi buku dan informasi perpustakaan dapat berubah ketika terdapat penambahan atau pembaruan data.
 
-## Sensors (S)
-
-| Sensor | Contoh |
-|-|-|
-| Text Query | Deskripsi buku |
-| Keywords | Kata kunci |
-| Story Elements | Karakter, tema, lokasi |
-| Metadata Filter | Tahun dan kategori |
-
-
-## Environment Classification
-
-| Property | Classification |
-|-|-|
-| Observability | Partially Observable |
-| Deterministic | Stochastic |
-| Sequential | Sequential |
-| Dynamic | Dynamic |
-| Discrete | Discrete |
-| Agents | Single Agent |
-
+6. **Discrete**  
+   State pencarian direpresentasikan dalam bentuk kandidat buku, metadata, dan hubungan antar node yang bersifat diskrit.
 
 ---
 
