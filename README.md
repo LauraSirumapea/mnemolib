@@ -1,30 +1,209 @@
 # MnemoLib
 
-**MnemoLib** adalah sistem katalog perpustakaan cerdas yang membantu
-pengguna menemukan buku dan jurnal berdasarkan potongan ingatan,
-konteks cerita, karakter, lokasi, atau informasi lain yang masih diingat
-oleh pengguna.
+## Sistem Katalog Perpustakaan Cerdas Berbasis Contextual Match & Semantic Search untuk Identifikasi Buku dan Jurnal Melalui Potongan Ingatan Pengguna
 
-## Anggota Kelompok
+
+## 1. Latar Belakang
+
+MnemoLib merupakan sistem katalog perpustakaan cerdas berbasis Artificial Intelligence yang membantu pengguna menemukan buku atau jurnal berdasarkan potongan ingatan.
+
+Pengguna sering kali hanya mengingat sebagian informasi seperti:
+
+- potongan judul
+- karakter cerita
+- topik buku
+- konteks kejadian
+- kata kunci tertentu
+
+Berbeda dengan pencarian katalog konvensional yang membutuhkan keyword lengkap, MnemoLib dirancang untuk memahami informasi parsial pengguna.
+
+
+---
+
+# 2. Anggota Kelompok
 
 | Nama | GitHub |
 |---|---|
-| Laura Sirumapea | [@LauraSirumapea](https://github.com/LauraSirumapea) |
-| Desnita Pardosi | [@DesnitaPardosi](https://github.com/DesnitaPardosi) |
-| Mia Sibuea | [@MiaSibuea](https://github.com/MiaSibuea) |
+| Laura Sirumapea | @LauraSirumapea |
+| Desnita Pardosi | @DesnitaPardosi |
+| Mia Sibuea | @MiaSibuea |
 
-## Project
 
-MnemoLib dikembangkan sebagai proyek Enterprise AI dengan tahapan
-pengembangan yang mencakup problem framing, state-space search,
-knowledge base, semantic search, RAG, agent, MCP, dan interface.
+---
 
-## Milestone 01
+# 3. Problem Statement
 
-Milestone 01 berfokus pada:
+Masalah utama:
 
-- Business Problem Framing
-- PEAS specification
-- State Space `(X, A, T, G, C)`
-- Uniform Cost Search (UCS) baseline
-- GitHub repository initialization
+1. Pengguna sulit menemukan buku ketika hanya mengingat sebagian informasi.
+2. Sistem pencarian biasa membutuhkan keyword yang spesifik.
+3. Informasi berupa cerita atau konteks sulit digunakan dalam pencarian tradisional.
+4. Dibutuhkan sistem yang mampu mencari berdasarkan kemiripan informasi.
+
+
+---
+
+# 4. PEAS Specification
+
+## Performance Measure (P)
+
+| Parameter | Deskripsi |
+|-|-|
+| Search Accuracy | Kemampuan menemukan koleksi yang sesuai |
+| Result Relevance | Tingkat relevansi hasil pencarian |
+| Response Time | Kecepatan memberikan hasil |
+| Retrieval Success Rate | Keberhasilan menemukan buku target |
+| User Satisfaction | Kepuasan pengguna |
+
+
+## Environment (E)
+
+| Komponen | Deskripsi |
+|-|-|
+| Library Catalog | Database buku dan jurnal |
+| Book Metadata | Judul, penulis, tahun, kategori |
+| User Input | Informasi berdasarkan ingatan pengguna |
+| Collection Database | Koleksi perpustakaan |
+
+
+## Actuators (A)
+
+| Actuator | Fungsi |
+|-|-|
+| Display Results | Menampilkan kandidat buku |
+| Show Metadata | Menampilkan detail buku |
+| Rank Results | Mengurutkan kandidat |
+| Recommendation | Memberikan rekomendasi |
+
+
+## Sensors (S)
+
+| Sensor | Contoh |
+|-|-|
+| Text Query | Deskripsi buku |
+| Keywords | Kata kunci |
+| Story Elements | Karakter, tema, lokasi |
+| Metadata Filter | Tahun dan kategori |
+
+
+## Environment Classification
+
+| Property | Classification |
+|-|-|
+| Observability | Partially Observable |
+| Deterministic | Stochastic |
+| Sequential | Sequential |
+| Dynamic | Dynamic |
+| Discrete | Discrete |
+| Agents | Single Agent |
+
+
+---
+
+# 5. State Space Formulation (X,A,T,G,C)
+
+## X — State Space
+
+State merepresentasikan kandidat buku yang sedang dievaluasi.
+
+Contoh:
+
+`State = {book_id, metadata, relevance_score}`
+
+
+## A — Actions
+
+Action merupakan aksi perpindahan antar kandidat buku.
+
+Contoh:
+
+`A(s) = memilih kandidat buku berikutnya`
+
+
+## T — Transition Model
+
+Transition menjelaskan perubahan state akibat suatu aksi.
+
+`T(s,a)=s'`
+
+
+## G — Goal Test
+
+Goal tercapai ketika kandidat buku sesuai dengan informasi pengguna.
+
+`G(s)=True`
+
+
+## C — Path Cost
+
+Cost pencarian berdasarkan:
+
+- jumlah node yang dieksplorasi
+- perbedaan metadata
+- ketidaksesuaian kandidat
+
+
+---
+
+# 6. Uniform Cost Search Baseline
+
+Pada Milestone 01, MnemoLib menggunakan Uniform Cost Search (UCS) sebagai algoritma baseline.
+
+UCS melakukan eksplorasi berdasarkan cost terkecil sehingga dapat menemukan solusi dengan biaya minimum.
+
+
+Implementasi:
+
+Implementasi algoritma Uniform Cost Search tersedia pada:
+
+```
+src/mnemolib/search/
+
+├── ucs.py
+└── mnemolib_graph.py
+```
+
+File `ucs.py` berisi implementasi algoritma Uniform Cost Search (UCS) untuk melakukan eksplorasi state berdasarkan nilai cost terkecil.
+
+File `mnemolib_graph.py` digunakan untuk merepresentasikan graph pencarian yang berisi node, state, dan hubungan antar kandidat buku.
+
+Pengujian implementasi dilakukan menggunakan pytest.
+
+Perintah menjalankan testing:
+
+```
+uv run pytest
+```
+
+Hasil pengujian:
+
+```
+3 passed
+```
+
+# 7. Repository Structure
+ Berikut struktur repository MnemoLib:
+
+```
+mnemolib/
+│
+├── README.md
+├── LICENSE
+├── pyproject.toml
+├── uv.lock
+│
+├── docs/
+│   └── milestone-01/
+│       ├── peas.md
+│       └── state-space.md
+│
+├── src/
+│   └── mnemolib/
+│       ├── __init__.py
+│       └── search/
+│           ├── ucs.py
+│           └── mnemolib_graph.py
+│
+└── tests/
+    └── test_ucs.py
+```
