@@ -106,4 +106,105 @@ flowchart TD
         E3 --> A3
     end
 
-    
+---
+
+## 6. Formulasi Ruang Keadaan Formal $(X, A, T, G, C)$
+
+Proses pencarian keputusan pada sistem MnemoLib diformulasikan ke dalam 5 elemen formal:
+
+- **$X$ (State Space / Kumpulan Status):**
+  - `start`: Memulai sesi pencarian.
+  - `query_received`: Kueri ingatan dari pengguna diterima sistem.
+  - `identify_title_author`: Sistem mengecek apakah ada potongan judul atau penulis.
+  - `extract_context`: Sistem membedah cerita atau topik buku yang diingat.
+  - `identify_story_elements`: Sistem mengidentifikasi tokoh, latar, atau alur cerita.
+  - `apply_filters`: Sistem menyaring berdasarkan kategori atau tahun terbit.
+  - `catalog_lookup`: Sistem mencari kecocokan ke database katalog perpustakaan.
+  - `results_presented` *(Goal)*: Buku berhasil ditemukan dan ditampilkan ke layar.
+
+- **$A$ (Actions / Himpunan Aksi):**
+  - Menerima kueri, ekstrak judul, ekstrak konteks cerita, pasang filter kategori, cari ke katalog, dan sajikan hasil.
+
+- **$T$ (Transition Model / Perubahan Status):**
+  - Model perpindahan status setelah tindakan dijalankan: $T(s, a) \to s'$.
+
+- **$G$ (Goal Test / Syarat Berhasil):**
+  - Pencarian dinyatakan selesai jika mencapai status `results_presented` dan menemukan minimal 1 buku yang relevan.
+
+- **$C$ (Step Cost / Waktu Proses Nyata dalam Milidetik):**
+  - `start` $\to$ `query_received`: `5 ms` (Terima masukan teks)
+  - `query_received` $\to$ `identify_title_author`: `20 ms` (Pengecekan judul)
+  - `query_received` $\to$ `apply_filters`: `15 ms` (Filter kategori/tahun)
+  - `query_received` $\to$ `extract_context`: `45 ms` (Ekstraksi konteks cerita)
+  - `identify_title_author` $\to$ `catalog_lookup`: `30 ms` (Cari indeks judul)
+  - `extract_context` $\to$ `identify_story_elements`: `20 ms` (Identifikasi tokoh/plot)
+  - `identify_story_elements` $\to$ `catalog_lookup`: `50 ms` (Pencarian semantik)
+  - `apply_filters` $\to$ `catalog_lookup`: `40 ms` (Pencarian katalog terfilter)
+  - `catalog_lookup` $\to$ `results_presented`: `10 ms` (Penyajian hasil)
+
+---
+
+## 7. Uniform Cost Search Baseline
+
+Pada Milestone 01, MnemoLib menggunakan Uniform Cost Search (UCS) sebagai algoritma baseline untuk menentukan alur keputusan pemrosesan dengan total estimasi waktu proses (latensi milidetik) terendah.
+
+Implementasi:
+```text
+src/mnemolib/search/
+├── ucs.py
+└── mnemolib_graph.py
+
+---
+
+## 8. Repository Structure
+
+Berikut struktur repository MnemoLib:
+
+```text
+mnemolib/
+│
+├── README.md
+├── LICENSE
+├── pyproject.toml
+├── uv.lock
+│
+├── docs/
+│   └── milestone-01/
+│       ├── problem-framing.md
+│       ├── peas.md
+│       └── state-space.md
+│
+├── src/
+│   └── mnemolib/
+│       ├── __init__.py
+│       └── search/
+│           ├── __init__.py
+│           ├── ucs.py
+│           └── mnemolib_graph.py
+│
+└── tests/
+    └── test_ucs.py
+
+---
+
+## 9. Panduan Menjalankan Program (Astral uv)
+# 1. Kloning repositori
+git clone https://github.com/LauraSirumapea/mnemolib.git
+cd mnemolib
+
+# 2. Pasang dependensi
+uv sync
+
+# 3. Jalankan pengujian otomatis
+uv run pytest -v
+
+# 4. Jalankan program demo
+uv run mnemolib
+
+---
+10. Lisensi
+
+Proyek ini menggunakan lisensi 
+MIT License
+.
+Hak Cipta (c) 2026 Institut Teknologi Del - Program Studi Sarjana Sistem Informasi.
