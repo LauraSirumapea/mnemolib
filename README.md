@@ -47,77 +47,33 @@ Masalah utama:
 
 | Komponen PEAS | Rincian Terukur & Spesifikasi |
 |---|---|
-| **Performance Measure** | • **Search Accuracy:** Kemampuan sistem menemukan buku/jurnal yang sesuai dengan informasi pengguna.<br><br>• **Relevance Score:** Tingkat kecocokan hasil pencarian berdasarkan informasi yang diberikan pengguna.<br><br>• **Response Time:** Waktu yang dibutuhkan sistem untuk menghasilkan kandidat buku.<br><br>• **Retrieval Success Rate:** Persentase keberhasilan menemukan koleksi yang sesuai.<br><br>• **Search Cost Minimization:** Meminimalkan biaya eksplorasi state pada proses pencarian. |
-| **Environment** | Koleksi buku dan jurnal perpustakaan, metadata buku (judul, penulis, kategori, tahun, sinopsis), database koleksi, serta input berupa potongan ingatan pengguna. |
-| **Actuators** | Output hasil pencarian buku/jurnal, ranking kandidat berdasarkan relevansi, rekomendasi koleksi, serta informasi metadata buku kepada pengguna. |
-| **Sensors** | Teks masukan pengguna berupa deskripsi buku, potongan cerita, karakter, lokasi, topik pembahasan, kata kunci, dan informasi metadata tambahan. |
+| **Performance Measure** | • **Search Accuracy:** Kemampuan sistem menemukan buku atau jurnal yang sesuai dengan ingatan pengguna.<br><br>• **Result Relevance:** Tingkat kecocokan hasil pencarian dengan informasi yang diberikan pengguna.<br><br>• **Response Time:** Kecepatan sistem dalam menghasilkan rekomendasi koleksi.<br><br>• **Retrieval Success Rate:** Persentase keberhasilan sistem menemukan koleksi yang dicari pengguna.<br><br>• **User Satisfaction:** Tingkat kepuasan pengguna terhadap hasil pencarian yang diberikan sistem. |
+| **Environment** | Koleksi buku dan jurnal perpustakaan, metadata koleksi (judul, penulis, kategori, tahun terbit, sinopsis), database perpustakaan, serta informasi parsial yang diberikan pengguna. |
+| **Actuators** | Menampilkan hasil pencarian buku/jurnal, memberikan rekomendasi koleksi, menampilkan metadata buku, dan mengurutkan kandidat hasil pencarian berdasarkan relevansi. |
+| **Sensors** | Input teks pengguna berupa potongan judul, deskripsi cerita, karakter, lokasi kejadian, topik pembahasan, kata kunci, dan informasi lain yang diingat pengguna. |
 
 
 ## Klasifikasi Sifat Lingkungan (6 Dimensi Russell & Norvig)
 
 1. **Partially Observable**  
-   Sistem tidak mendapatkan informasi lengkap mengenai buku yang dicari karena pengguna hanya memberikan potongan ingatan atau informasi parsial.
+   Sistem tidak memperoleh informasi lengkap mengenai buku yang dicari karena pengguna hanya memberikan potongan ingatan.
 
 2. **Single Agent**  
-   MnemoLib bekerja sebagai satu intelligent agent yang melakukan proses pencarian dan rekomendasi buku.
+   MnemoLib berperan sebagai satu intelligent agent yang melakukan proses pencarian dan rekomendasi buku.
 
 3. **Stochastic**  
-   Hasil pencarian dapat memiliki ketidakpastian karena input pengguna bersifat subjektif dan dapat menghasilkan beberapa kandidat buku.
+   Hasil pencarian memiliki kemungkinan berbeda karena informasi yang diberikan pengguna dapat bersifat subjektif dan tidak lengkap.
 
 4. **Sequential**  
-   Setiap proses eksplorasi kandidat buku memengaruhi langkah pencarian berikutnya.
+   Proses pencarian dilakukan melalui beberapa tahap hingga menghasilkan rekomendasi buku yang sesuai.
 
 5. **Dynamic**  
-   Koleksi buku dan informasi perpustakaan dapat berubah ketika terdapat penambahan atau pembaruan data.
+   Data koleksi perpustakaan dapat berubah apabila terdapat penambahan atau pembaruan buku/jurnal.
 
 6. **Discrete**  
-   State pencarian direpresentasikan dalam bentuk kandidat buku, metadata, dan hubungan antar node yang bersifat diskrit.
+   Informasi koleksi buku, metadata, dan hasil pencarian direpresentasikan dalam bentuk data diskrit.
 
----
-
-# 5. State Space Formulation (X,A,T,G,C)
-
-## X — State Space
-
-State merepresentasikan kandidat buku yang sedang dievaluasi.
-
-Contoh:
-
-`State = {book_id, metadata, relevance_score}`
-
-
-## A — Actions
-
-Action merupakan aksi perpindahan antar kandidat buku.
-
-Contoh:
-
-`A(s) = memilih kandidat buku berikutnya`
-
-
-## T — Transition Model
-
-Transition menjelaskan perubahan state akibat suatu aksi.
-
-`T(s,a)=s'`
-
-
-## G — Goal Test
-
-Goal tercapai ketika kandidat buku sesuai dengan informasi pengguna.
-
-`G(s)=True`
-
-
-## C — Path Cost
-
-Cost pencarian berdasarkan:
-
-- jumlah node yang dieksplorasi
-- perbedaan metadata
-- ketidaksesuaian kandidat
-
-
+   
 ---
 
 # 6. Uniform Cost Search Baseline
