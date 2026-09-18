@@ -1,7 +1,6 @@
 from heapq import heappop, heappush
 from typing import Optional
 
-
 Graph = dict[str, list[tuple[str, float]]]
 
 
@@ -10,7 +9,11 @@ def uniform_cost_search(
     start: str,
     goal: str,
 ) -> Optional[tuple[list[str], float]]:
-    """Find the minimum-cost path from start to goal using UCS."""
+    """Mencari jalur dengan biaya/waktu terendah dari start ke goal menggunakan UCS."""
+
+    # Validasi awal: jika simpul start tidak ada di dalam graf
+    if start not in graph:
+        return None
 
     frontier: list[tuple[float, int, str]] = []
     heappush(frontier, (0.0, 0, start))
@@ -23,11 +26,11 @@ def uniform_cost_search(
     while frontier:
         current_cost, _, current = heappop(frontier)
 
-        # Ignore outdated entries in the priority queue.
-        if current_cost > cost_so_far[current]:
+        # Abaikan entri yang sudah usang dalam antrean prioritas
+        if current_cost > cost_so_far.get(current, float("inf")):
             continue
 
-        # Goal reached.
+        # Tujuan tercapai (Goal Test)
         if current == goal:
             path = _reconstruct_path(came_from, goal)
             return path, current_cost
@@ -35,7 +38,7 @@ def uniform_cost_search(
         for next_state, step_cost in graph.get(current, []):
             if step_cost < 0:
                 raise ValueError(
-                    "UCS requires non-negative edge costs."
+                    "UCS mensyaratkan bobot biaya bernilai non-negatif."
                 )
 
             new_cost = current_cost + step_cost
@@ -60,14 +63,13 @@ def _reconstruct_path(
     came_from: dict[str, Optional[str]],
     goal: str,
 ) -> list[str]:
-    """Reconstruct the path from start to goal."""
-
+    """Merekonstruksi urutan jalur dari start menuju goal."""
     path: list[str] = []
     current: Optional[str] = goal
 
     while current is not None:
         path.append(current)
-        current = came_from[current]
+        current = came_from.get(current)
 
     path.reverse()
     return path
