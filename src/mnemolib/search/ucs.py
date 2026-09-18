@@ -11,6 +11,7 @@ def uniform_cost_search(
 ) -> Optional[tuple[list[str], float]]:
     """Mencari jalur dengan biaya/waktu terendah dari start ke goal menggunakan UCS."""
 
+
     # Validasi awal: jika simpul start tidak ada di dalam graf
     if start not in graph:
         return None
