@@ -58,7 +58,6 @@ def uniform_cost_search(
 
     return None
 
-
 def _reconstruct_path(
     came_from: dict[str, Optional[str]],
     goal: str,
