@@ -51,36 +51,37 @@ Masalah utama:
 
 | Komponen PEAS | Rincian |
 |---|---|
-| **Performance Measure** | - Search Accuracy (≥85%)<br>- Result Relevance<br>- Response Time (<1,5 detik)<br>- Search Traversal Latency (≤50 ms)<br>- User Satisfaction |
-| **Environment** | Lingkungan Perpustakaan IT Del yang terdiri dari koleksi buku, jurnal, metadata koleksi, database perpustakaan, serta informasi parsial pengguna. |
-| **Actuators** | Menampilkan hasil pencarian, memberikan rekomendasi buku/jurnal, menampilkan nomor rak dan metadata koleksi. |
-| **Sensors** | Input teks pengguna berupa potongan judul, deskripsi cerita, karakter, lokasi kejadian, topik, dan kata kunci. |
+| **Performance Measure (Ukuran Kinerja)** | - **Akurasi Pencarian (*Search Accuracy*)**: ≥85%<br>- **Relevansi Hasil (*Result Relevance*)**<br>- **Waktu Respons (*Response Time*)**: <1,5 detik<br>- **Latensi Penelusuran (*Search Traversal Latency*)**: ≤50 ms<br>- **Kepuasan Pengguna (*User Satisfaction*)** |
+| **Environment (Lingkungan)** | Lingkungan Perpustakaan IT Del yang terdiri dari koleksi buku fisik, jurnal ilmiah, metadata koleksi, basis data (*database*) perpustakaan, serta masukan informasi parsial pengguna. |
+| **Actuators (Aktuator / Aksi Keluaran)** | Menampilkan hasil pencarian, memberikan rekomendasi buku/jurnal, serta menampilkan nomor rak penyimpanan dan detail metadata koleksi. |
+| **Sensors (Sensor / Masukan)** | Masukan teks pengguna berupa potongan ingatan judul, deskripsi cerita, karakter, lokasi kejadian, topik, dan kata kunci pencarian. |
 
-## Klasifikasi Sifat Lingkungan Russell & Norvig
 
-1. **Partially Observable**
+### Klasifikasi Sifat Lingkungan (Russell & Norvig)
 
-   Sistem tidak memperoleh informasi lengkap karena pengguna hanya memberikan potongan ingatan.
+1. **Partially Observable (Dapat Diamati Sebagian)**
+   - **Artinya:** Sistem tidak memperoleh informasi lingkungan secara utuh/penuh.
+   - **Konteks MnemoLib:** Agen hanya menerima potongan ingatan atau informasi samar dari pengguna, bukan informasi bibliografis lengkap (seperti judul persis atau ISBN).
 
-2. **Single Agent**
+2. **Single Agent (Agen Tunggal)**
+   - **Artinya:** Hanya ada satu agen cerdas yang beroperasi di dalam sistem.
+   - **Konteks MnemoLib:** MnemoLib bertindak secara mandiri dalam mencari dan memproses data, tanpa ada agen lain yang bersaing (*competitive*) maupun berkoordinasi langsung di lingkungan tersebut.
 
-   MnemoLib bertindak sebagai intelligent agent yang melakukan pencarian secara mandiri.
+3. **Stochastic (Stokastik / Mengandung Ketidakpastian)**
+   - **Artinya:** Hasil atau keadaan berikutnya tidak dapat dipastikan 100% dari tindakan saat ini saja.
+   - **Konteks MnemoLib:** Karena input ingatan pengguna bersifat subjektif dan ambigu, proses pencocokan semantik menghasilkan probabilitas kemiripan, bukan kepastian mutlak.
 
-3. **Stochastic**
+4. **Sequential (Sekuensial / Berkelanjutan)**
+   - **Artinya:** Tindakan saat ini mempengaruhi keputusan atau langkah pada tahap berikutnya.
+   - **Konteks MnemoLib:** Proses pencarian dilakukan melalui beberapa tahapan berurutan (mulai dari validasi kueri, ekstraksi konteks, identifikasi elemen cerita, hingga penelusuran katalog).
 
-   Hasil pencarian dapat berbeda karena informasi pengguna bersifat subjektif.
+5. **Dynamic (Dinamis / Berubah-ubah)**
+   - **Artinya:** Lingkungan dapat mengalami perubahan sewaktu agen sedang memproses data.
+   - **Konteks MnemoLib:** Kondisi koleksi perpustakaan dapat berubah sewaktu-waktu, misalnya ketersediaan buku di rak fisik, status peminjaman, atau pembaruan katalog data.
 
-4. **Sequential**
-
-   Proses pencarian dilakukan melalui beberapa tahapan.
-
-5. **Dynamic**
-
-   Data koleksi perpustakaan dapat berubah.
-
-6. **Discrete**
-
-   Data buku, metadata, dan status pencarian direpresentasikan dalam bentuk data diskrit.
+6. **Discrete (Diskrit / Terbatas dan Terpisah)**
+   - **Artinya:** State, persepsi, dan tindakan memiliki nilai-nilai yang terpisah secara tegas (bukan analog/kontinu).
+   - **Konteks MnemoLib:** Data buku, nomor rak, ID koleksi, metadata, dan langkah-langkah pencarian memiliki keadaan yang berhingga dan terhitung secara pasti.
 
 ---
 
