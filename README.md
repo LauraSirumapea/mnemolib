@@ -2,10 +2,17 @@
 
 ## Sistem Katalog Perpustakaan Cerdas Berbasis Contextual Match & Semantic Search untuk Identifikasi Buku dan Jurnal Melalui Potongan Ingatan Pengguna
 
+[![Python](https://img.shields.io/badge/Python-3.11%20%7C%203.12%20%7C%203.13-blue.svg)](https://www.python.org/)
+[![Manajer Paket](https://img.shields.io/badge/Manajer%20Paket-Astral%20uv-purple.svg)](https://github.com/astral-sh/uv)
+[![Pengujian](https://img.shields.io/badge/Pengujian-pytest-yellow.svg)](https://pytest.org)
+[![Lisensi](https://img.shields.io/badge/Lisensi-MIT-green.svg)](LICENSE)
+[![Kampus](https://img.shields.io/badge/Kampus-Institut%20Teknologi%20Del-004B87.svg)](https://www.del.ac.id/)
 
-## 1. Latar Belakang
+---
 
-MnemoLib merupakan sistem katalog perpustakaan cerdas berbasis Artificial Intelligence yang membantu pengguna menemukan buku atau jurnal berdasarkan potongan ingatan.
+# 1. Latar Belakang
+
+MnemoLib merupakan sistem katalog perpustakaan cerdas berbasis Artificial Intelligence yang membantu civitas akademika **Institut Teknologi Del (IT Del)** menemukan buku atau jurnal berdasarkan potongan ingatan.
 
 Pengguna sering kali hanya mengingat sebagian informasi seperti:
 
@@ -15,19 +22,17 @@ Pengguna sering kali hanya mengingat sebagian informasi seperti:
 - konteks kejadian
 - kata kunci tertentu
 
-Berbeda dengan pencarian katalog konvensional yang membutuhkan keyword lengkap, MnemoLib dirancang untuk memahami informasi parsial pengguna.
-
+Berbeda dengan pencarian katalog konvensional yang membutuhkan keyword lengkap, MnemoLib dirancang untuk memahami informasi parsial pengguna menggunakan pendekatan **Contextual Match** dan **Semantic Search**.
 
 ---
 
 # 2. Anggota Kelompok
 
-| Nama | GitHub |
-|---|---|
-| Laura Sirumapea | @LauraSirumapea |
-| Desnita Pardosi | @DesnitaPardosi |
-| Mia Sibuea | @MiaSibuea |
-
+| Nama | GitHub | Peran di Tim |
+|---|---|---|
+| Laura Sirumapea | @LauraSirumapea | **AI Architect & Model Lead** |
+| Desnita Pardosi | @DesnitaPardosi | **Data & Knowledge Engineer** |
+| Mia Sibuea | @MiaSibuea | **Integration & Interface Engineer** |
 
 ---
 
@@ -36,103 +41,234 @@ Berbeda dengan pencarian katalog konvensional yang membutuhkan keyword lengkap, 
 Masalah utama:
 
 1. Pengguna sulit menemukan buku ketika hanya mengingat sebagian informasi.
-2. Sistem pencarian biasa membutuhkan keyword yang spesifik.
-3. Informasi berupa cerita atau konteks sulit digunakan dalam pencarian tradisional.
-4. Dibutuhkan sistem yang mampu mencari berdasarkan kemiripan informasi.
-
+2. Sistem pencarian konvensional membutuhkan keyword yang spesifik.
+3. Informasi berupa cerita atau konteks sulit digunakan pada pencarian tradisional.
+4. Dibutuhkan sistem yang mampu mencari berdasarkan kemiripan makna dengan waktu respon cepat.
 
 ---
 
 # 4. Spesifikasi Formal PEAS
 
-| Komponen PEAS | Rincian Terukur & Spesifikasi |
+| Komponen PEAS | Rincian |
 |---|---|
-| **Performance Measure** | • **Search Accuracy:** Kemampuan sistem menemukan buku atau jurnal yang sesuai dengan ingatan pengguna.<br><br>• **Result Relevance:** Tingkat kecocokan hasil pencarian dengan informasi yang diberikan pengguna.<br><br>• **Response Time:** Kecepatan sistem dalam menghasilkan rekomendasi koleksi.<br><br>• **Retrieval Success Rate:** Persentase keberhasilan sistem menemukan koleksi yang dicari pengguna.<br><br>• **User Satisfaction:** Tingkat kepuasan pengguna terhadap hasil pencarian yang diberikan sistem. |
-| **Environment** | Koleksi buku dan jurnal perpustakaan, metadata koleksi (judul, penulis, kategori, tahun terbit, sinopsis), database perpustakaan, serta informasi parsial yang diberikan pengguna. |
-| **Actuators** | Menampilkan hasil pencarian buku/jurnal, memberikan rekomendasi koleksi, menampilkan metadata buku, dan mengurutkan kandidat hasil pencarian berdasarkan relevansi. |
-| **Sensors** | Input teks pengguna berupa potongan judul, deskripsi cerita, karakter, lokasi kejadian, topik pembahasan, kata kunci, dan informasi lain yang diingat pengguna. |
+| **Performance Measure (Ukuran Kinerja)** | - **Akurasi Pencarian (*Search Accuracy*)**: ≥85%<br>- **Relevansi Hasil (*Result Relevance*)**<br>- **Waktu Respons (*Response Time*)**: <1,5 detik<br>- **Latensi Penelusuran (*Search Traversal Latency*)**: ≤50 ms<br>- **Kepuasan Pengguna (*User Satisfaction*)** |
+| **Environment (Lingkungan)** | Lingkungan Perpustakaan IT Del yang terdiri dari koleksi buku fisik, jurnal ilmiah, metadata koleksi, basis data (*database*) perpustakaan, serta masukan informasi parsial pengguna. |
+| **Actuators (Aktuator / Aksi Keluaran)** | Menampilkan hasil pencarian, memberikan rekomendasi buku/jurnal, serta menampilkan nomor rak penyimpanan dan detail metadata koleksi. |
+| **Sensors (Sensor / Masukan)** | Masukan teks pengguna berupa potongan ingatan judul, deskripsi cerita, karakter, lokasi kejadian, topik, dan kata kunci pencarian. |
 
 
-## Klasifikasi Sifat Lingkungan (6 Dimensi Russell & Norvig)
+### Klasifikasi Sifat Lingkungan (Russell & Norvig)
 
-1. **Partially Observable**  
-   Sistem tidak memperoleh informasi lengkap mengenai buku yang dicari karena pengguna hanya memberikan potongan ingatan.
+1. **Partially Observable (Dapat Diamati Sebagian)**
+   - **Artinya:** Sistem tidak memperoleh informasi lingkungan secara utuh/penuh.
+   - **Konteks MnemoLib:** Agen hanya menerima potongan ingatan atau informasi samar dari pengguna, bukan informasi bibliografis lengkap (seperti judul persis atau ISBN).
 
-2. **Single Agent**  
-   MnemoLib berperan sebagai satu intelligent agent yang melakukan proses pencarian dan rekomendasi buku.
+2. **Single Agent (Agen Tunggal)**
+   - **Artinya:** Hanya ada satu agen cerdas yang beroperasi di dalam sistem.
+   - **Konteks MnemoLib:** MnemoLib bertindak secara mandiri dalam mencari dan memproses data, tanpa ada agen lain yang bersaing (*competitive*) maupun berkoordinasi langsung di lingkungan tersebut.
 
-3. **Stochastic**  
-   Hasil pencarian memiliki kemungkinan berbeda karena informasi yang diberikan pengguna dapat bersifat subjektif dan tidak lengkap.
+3. **Stochastic (Stokastik / Mengandung Ketidakpastian)**
+   - **Artinya:** Hasil atau keadaan berikutnya tidak dapat dipastikan 100% dari tindakan saat ini saja.
+   - **Konteks MnemoLib:** Karena input ingatan pengguna bersifat subjektif dan ambigu, proses pencocokan semantik menghasilkan probabilitas kemiripan, bukan kepastian mutlak.
 
-4. **Sequential**  
-   Proses pencarian dilakukan melalui beberapa tahap hingga menghasilkan rekomendasi buku yang sesuai.
+4. **Sequential (Sekuensial / Berkelanjutan)**
+   - **Artinya:** Tindakan saat ini mempengaruhi keputusan atau langkah pada tahap berikutnya.
+   - **Konteks MnemoLib:** Proses pencarian dilakukan melalui beberapa tahapan berurutan (mulai dari validasi kueri, ekstraksi konteks, identifikasi elemen cerita, hingga penelusuran katalog).
 
-5. **Dynamic**  
-   Data koleksi perpustakaan dapat berubah apabila terdapat penambahan atau pembaruan buku/jurnal.
+5. **Dynamic (Dinamis / Berubah-ubah)**
+   - **Artinya:** Lingkungan dapat mengalami perubahan sewaktu agen sedang memproses data.
+   - **Konteks MnemoLib:** Kondisi koleksi perpustakaan dapat berubah sewaktu-waktu, misalnya ketersediaan buku di rak fisik, status peminjaman, atau pembaruan katalog data.
 
-6. **Discrete**  
-   Informasi koleksi buku, metadata, dan hasil pencarian direpresentasikan dalam bentuk data diskrit.
+6. **Discrete (Diskrit / Terbatas dan Terpisah)**
+   - **Artinya:** State, persepsi, dan tindakan memiliki nilai-nilai yang terpisah secara tegas (bukan analog/kontinu).
+   - **Konteks MnemoLib:** Data buku, nomor rak, ID koleksi, metadata, dan langkah-langkah pencarian memiliki keadaan yang berhingga dan terhitung secara pasti.
+
 ---
 
-# 6. Uniform Cost Search Baseline
+# 5. Diagram Arsitektur Sistem
 
-Pada Milestone 01, MnemoLib menggunakan Uniform Cost Search (UCS) sebagai algoritma baseline.
+```mermaid
+flowchart TD
 
-UCS melakukan eksplorasi berdasarkan cost terkecil sehingga dapat menemukan solusi dengan biaya minimum.
+subgraph SENSORS["1. Masukan (Sensors)"]
+    S1["Kueri Pengguna: Potongan Ingatan / Konteks"]
+    S2["Katalog Buku & Metadata Perpustakaan IT Del"]
+end
 
+subgraph ENGINE["2. Mesin Pencari MnemoLib"]
+    E1["Validasi Kueri & Ekstraksi Makna"]
+    E2["Formulasi Ruang Keadaan (X, A, T, G, C)"]
+    E3["Pencarian Jalur Optimal UCS (heapq)"]
+
+    S1 --> E1
+    S2 --> E2
+    E1 --> E2
+    E2 --> E3
+end
+
+subgraph ACTUATORS["3. Keluaran (Actuators)"]
+    A1["Rekomendasi Judul Buku / Jurnal"]
+    A2["Informasi Nomor Rak di Perpustakaan IT Del"]
+    A3["Sinopsis Singkat & Alasan Rekomendasi"]
+
+    E3 --> A1
+    E3 --> A2
+    E3 --> A3
+end
+```
+
+---
+
+# 6. Formulasi Ruang Keadaan Formal (X, A, T, G, C)
+
+Proses pencarian MnemoLib diformulasikan menjadi lima elemen:
+
+## X (State Space)
+
+Kumpulan kondisi sistem:
+
+- `start` : Memulai pencarian.
+- `query_received` : Sistem menerima masukan pengguna.
+- `identify_title_author` : Mengecek kemungkinan judul atau penulis.
+- `extract_context` : Mengekstraksi konteks cerita.
+- `identify_story_elements` : Mengidentifikasi tokoh, latar, dan alur.
+- `apply_filters` : Penyaringan kategori dan tahun.
+- `catalog_lookup` : Pencarian pada database katalog.
+- `results_presented` : Goal state ketika hasil ditemukan.
+
+---
+
+## A (Actions)
+
+Aksi yang dilakukan sistem:
+
+- menerima query pengguna
+- ekstraksi judul
+- ekstraksi konteks
+- pemasangan filter
+- pencarian katalog
+- penyajian hasil rekomendasi
+
+---
+
+## T (Transition Model)
+
+Model perubahan keadaan:
+
+\[
+T(s,a) \rightarrow s'
+\]
+
+Setiap aksi akan menghasilkan perubahan status baru hingga mencapai kondisi tujuan.
+
+---
+
+## G (Goal Test)
+
+Pencarian berhasil apabila:
+
+- sistem mencapai state `results_presented`
+- ditemukan minimal satu koleksi yang relevan
+
+---
+
+## C (Step Cost)
+
+Estimasi biaya waktu proses:
+
+| Transisi | Cost |
+|---|---:|
+| start → query_received | 5 ms |
+| query_received → identify_title_author | 20 ms |
+| query_received → extract_context | 45 ms |
+| query_received → apply_filters | 15 ms |
+| identify_title_author → catalog_lookup | 30 ms |
+| extract_context → identify_story_elements | 20 ms |
+| identify_story_elements → catalog_lookup | 50 ms |
+| apply_filters → catalog_lookup | 40 ms |
+| catalog_lookup → results_presented | 10 ms |
+
+---
+
+# 7. Uniform Cost Search Baseline
+
+Pada Milestone 01, MnemoLib menggunakan **Uniform Cost Search (UCS)** sebagai algoritma baseline untuk menentukan jalur keputusan dengan total biaya waktu terendah.
 
 Implementasi:
 
-Implementasi algoritma Uniform Cost Search tersedia pada:
-
-```
+```text
 src/mnemolib/search/
 
 ├── ucs.py
 └── mnemolib_graph.py
 ```
 
-File `ucs.py` berisi implementasi algoritma Uniform Cost Search (UCS) untuk melakukan eksplorasi state berdasarkan nilai cost terkecil.
+---
 
-File `mnemolib_graph.py` digunakan untuk merepresentasikan graph pencarian yang berisi node, state, dan hubungan antar kandidat buku.
+# 8. Repository Structure
 
-Pengujian implementasi dilakukan menggunakan pytest.
+Struktur repository MnemoLib:
 
-Perintah menjalankan testing:
-
-```
-uv run pytest
-```
-
-Hasil pengujian:
-
-```
-3 passed
-```
-
-# 7. Repository Structure
- Berikut struktur repository MnemoLib:
-
-```
+```text
 mnemolib/
-│
+
 ├── README.md
 ├── LICENSE
 ├── pyproject.toml
 ├── uv.lock
-│
+
 ├── docs/
 │   └── milestone-01/
+│       ├── problem-framing.md
 │       ├── peas.md
 │       └── state-space.md
-│
+
 ├── src/
 │   └── mnemolib/
 │       ├── __init__.py
 │       └── search/
+│           ├── __init__.py
 │           ├── ucs.py
 │           └── mnemolib_graph.py
-│
+
 └── tests/
     └── test_ucs.py
 ```
+
+---
+
+# 9. Panduan Menjalankan Program
+
+## Clone Repository
+
+```bash
+git clone https://github.com/LauraSirumapea/mnemolib.git
+
+cd mnemolib
+```
+
+## Install Dependency
+
+```bash
+uv sync
+```
+
+## Jalankan Testing
+
+```bash
+uv run pytest -v
+```
+
+## Jalankan Demo
+
+```bash
+uv run mnemolib
+```
+
+---
+
+# 10. Lisensi
+
+Proyek ini menggunakan **MIT License**.
+
+Hak Cipta (c) 2026 Institut Teknologi Del - Program Studi Sarjana Sistem Informasi.
