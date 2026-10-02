@@ -2,7 +2,9 @@
 name = "mnemolib"
 version = "0.1.0"
 authors = [
-    { name = "LauraSirumapea", email = "lauraawise07@gmail.com" }
+    { name = "Laura Sirumapea", email = "lauraawise07@gmail.com" },
+    { name = "Desnita Pardosi", email = "desnitapardosi@gmail.com" },
+    { name = "Mia Sibuea", email = "miasibuea152@gmail.com" }
 ]
 readme = "README.md"
 requires-python = ">=3.11"
