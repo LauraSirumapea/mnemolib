@@ -11,6 +11,7 @@ def select_unassigned_variable(assignment, domains):
     remaining domain.
     """
 
+
     unassigned_variables = [
         variable
         for variable in domains

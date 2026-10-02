@@ -12,6 +12,7 @@ ARCS = (
 )
 
 
+
 def revise(domains, variable_a, variable_b):
     """
     Remove values from variable_a's domain that have
@@ -23,6 +24,7 @@ def revise(domains, variable_a, variable_b):
     """
 
     revised = False
+
 
     for value_a in domains[variable_a].copy():
         has_support = False

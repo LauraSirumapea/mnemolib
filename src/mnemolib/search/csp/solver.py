@@ -148,6 +148,7 @@ def solve(query_features):
         domains,
         query_features,
     )
+    
 
     # Step 3:
     # Run AC-3 before starting backtracking.
