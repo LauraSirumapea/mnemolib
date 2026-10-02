@@ -1,0 +1,1 @@
+"""Constraint Satisfaction Problem solver for MnemoLib."""
