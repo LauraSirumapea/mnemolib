@@ -1,4 +1,14 @@
-"""CSP solver for MnemoLib using AC-3, MRV, and backtracking."""
+"""CSP solver for MnemoLib using AC-3, MRV, and backtracking.
+
+Modul ini mendukung pencarian solusi batasan dengan:
+- Propagasi konsistensi busur (AC-3)
+- Heuristik Minimum Remaining Values (MRV)
+- Backtracking Search dengan pemangkasan dini (early pruning)
+- Pengumpulan metrik performa (node assignments, backtracks, latency) untuk analisis sensitivitas.
+"""
+
+import time
+from typing import Any, Dict, List, Optional, Set, Tuple, Union
 
 from .ac3 import ac3
 from .constraints import (
@@ -9,11 +19,11 @@ from .constraints import (
 from .mrv import select_unassigned_variable
 
 
-def check_partial_assignment(assignment, query_features):
-    """
-    Check whether a partial assignment is still consistent
-    with the MnemoLib CSP constraints.
-    """
+def check_partial_assignment(
+    assignment: Dict[str, int],
+    query_features: Dict[str, Any],
+) -> bool:
+    """Memeriksa apakah penugasan parsial konsisten dengan batasan MnemoLib."""
 
     # C1: title/author information
     if query_features.get("title_author", False):
@@ -35,130 +45,147 @@ def check_partial_assignment(assignment, query_features):
         if "X4" in assignment and assignment["X4"] != 1:
             return False
 
-    # C6: X3 = 1 requires X2 = 1
+    # C6: Dependensi alur - X3 = 1 mensyaratkan X2 = 1
     if assignment.get("X3") == 1:
         if "X2" in assignment and assignment["X2"] != 1:
+            return False
+
+    if assignment.get("X2") == 0:
+        if "X3" in assignment and assignment["X3"] == 1:
+            return False
+
+    # Batasan kuota maksimum proses jika dispesifikasikan
+    max_active = query_features.get("max_active_processes")
+    if max_active is not None:
+        if sum(assignment.values()) > max_active:
             return False
 
     return True
 
 
-def copy_domains(domains):
-    """
-    Create a deep-enough copy of CSP domains.
-
-    Each domain is copied as a separate set so that
-    backtracking does not modify the parent state.
-    """
-
-    return {
-        variable: set(values)
-        for variable, values in domains.items()
-    }
+def copy_domains(domains: Dict[str, Set[int]]) -> Dict[str, Set[int]]:
+    """Membuat salinan independen dari domain untuk menjaga integritas percabangan."""
+    return {variable: set(values) for variable, values in domains.items()}
 
 
-def backtracking_search(assignment, domains, query_features):
-    """
-    Solve the CSP using backtracking with MRV.
+def backtracking_search(
+    assignment: Dict[str, int],
+    domains: Dict[str, Set[int]],
+    query_features: Dict[str, Any],
+    use_ac3: bool = True,
+    use_mrv: bool = True,
+    stats: Optional[Dict[str, int]] = None,
+) -> Optional[Dict[str, int]]:
+    """Menyelesaikan CSP menggunakan backtracking dengan konfigurasi AC-3 & MRV."""
+    if stats is not None:
+        stats["nodes_visited"] += 1
 
-    MRV is used to select the next variable.
-    AC-3 is applied after assigning a value.
-    """
-
-    # Base case:
-    # all variables have been assigned.
+    # Kasus Dasar: Seluruh variabel telah terisi
     if len(assignment) == len(domains):
         if check_assignment(assignment, query_features):
             return assignment.copy()
-
+        if stats is not None:
+            stats["backtracks"] += 1
         return None
 
-    # Select the next variable using MRV.
-    variable = select_unassigned_variable(
-        assignment,
-        domains,
-    )
+    # Pemilihan variabel: MRV atau urutan deterministik
+    if use_mrv:
+        variable = select_unassigned_variable(assignment, domains)
+    else:
+        unassigned = [v for v in domains if v not in assignment]
+        variable = unassigned[0] if unassigned else None
 
-    # Try values in a deterministic order.
+    if variable is None:
+        return None
+
+    # Urutkan nilai domain untuk keteraturan eksplorasi
     for value in sorted(domains[variable]):
-
-        # Create a new partial assignment.
         new_assignment = assignment.copy()
         new_assignment[variable] = value
 
-        # Check constraints that can already be evaluated.
-        if not check_partial_assignment(
-            new_assignment,
-            query_features,
-        ):
+        # Pengecekan konsistensi parsial
+        if not check_partial_assignment(new_assignment, query_features):
+            if stats is not None:
+                stats["backtracks"] += 1
             continue
 
-        # Create independent domains for this branch.
         new_domains = copy_domains(domains)
-
-        # Assign the selected value to the variable.
         new_domains[variable] = {value}
 
-        # Apply AC-3 after the assignment.
-        if not ac3(new_domains):
-            continue
+        # Propagasi AC-3 pada cabang pencarian jika diaktifkan
+        if use_ac3:
+            if not ac3(new_domains):
+                if stats is not None:
+                    stats["backtracks"] += 1
+                continue
 
-        # Continue recursively.
         result = backtracking_search(
             new_assignment,
             new_domains,
             query_features,
+            use_ac3=use_ac3,
+            use_mrv=use_mrv,
+            stats=stats,
         )
 
         if result is not None:
             return result
 
-    # No valid assignment was found in this branch.
+    if stats is not None:
+        stats["backtracks"] += 1
     return None
 
 
-def solve(query_features):
-    """
-    Solve the MnemoLib CSP.
+def solve(
+    query_features: Dict[str, Any],
+    use_ac3: bool = True,
+    use_mrv: bool = True,
+    return_stats: bool = False,
+) -> Union[Optional[Dict[str, int]], Tuple[Optional[Dict[str, int]], Dict[str, Any]]]:
+    """Menyelesaikan CSP MnemoLib dengan opsi analisis performa.
 
     Args:
-        query_features: Dictionary indicating which
-                        information exists in the user's query.
-
-        Example:
-        {
-            "title_author": False,
-            "context": True,
-            "story": False,
-            "filter": False,
-        }
+        query_features: Dictionary representasi fitur input kueri pengguna.
+        use_ac3: Mengaktifkan propagasi AC-3 sebelum dan selama pencarian.
+        use_mrv: Mengaktifkan heuristik Minimum Remaining Values.
+        return_stats: Jika True, mengembalikan tuple (solusi, statistik_eksekusi).
 
     Returns:
-        A valid assignment dictionary if a solution exists.
-        None if the CSP has no solution.
+        Assignment dictionary jika solusi ditemukan, atau None jika tidak ada solusi.
     """
+    start_time = time.perf_counter()
+    stats: Dict[str, Any] = {
+        "nodes_visited": 0,
+        "backtracks": 0,
+        "time_ms": 0.0,
+    }
 
-    # Step 1:
-    # Create the initial domain for all variables.
+    # Tahap 1: Inisialisasi domain
     domains = create_domains()
 
-    # Step 2:
-    # Apply constraints derived from the query.
-    apply_query_constraints(
-        domains,
-        query_features,
-    )
-    
+    # Tahap 2: Terapkan batasan uniter dari kueri
+    apply_query_constraints(domains, query_features)
 
-    # Step 3:
-    # Run AC-3 before starting backtracking.
-    if not ac3(domains):
-        return None
+    # Tahap 3: Propagasi AC-3 awal (Pre-search domain reduction)
+    if use_ac3:
+        if not ac3(domains):
+            elapsed = (time.perf_counter() - start_time) * 1000.0
+            stats["time_ms"] = elapsed
+            return (None, stats) if return_stats else None
 
-    # Step 4:
-    # Run MRV + backtracking.
-    return backtracking_search(
+    # Tahap 4: Backtracking search
+    solution = backtracking_search(
         assignment={},
         domains=domains,
         query_features=query_features,
+        use_ac3=use_ac3,
+        use_mrv=use_mrv,
+        stats=stats,
     )
+
+    elapsed = (time.perf_counter() - start_time) * 1000.0
+    stats["time_ms"] = elapsed
+
+    if return_stats:
+        return solution, stats
+    return solution

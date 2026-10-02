@@ -190,49 +190,78 @@ Estimasi biaya waktu proses:
 
 ---
 
-# 7. Uniform Cost Search Baseline
+# 7. Algoritma Pencarian & Pemecahan Masalah
 
-Pada Milestone 01, MnemoLib menggunakan **Uniform Cost Search (UCS)** sebagai algoritma baseline untuk menentukan jalur keputusan dengan total biaya waktu terendah.
+### 7.1 Milestone 01: Uniform Cost Search (UCS) Baseline
+Pada Milestone 01, MnemoLib menggunakan **Uniform Cost Search (UCS)** untuk menentukan jalur keputusan dengan total biaya latensi terendah pada graf ruang keadaan ingatan pengguna.
 
 Implementasi:
-
 ```text
 src/mnemolib/search/
-
 ├── ucs.py
 └── mnemolib_graph.py
 ```
 
+### 7.2 Milestone 02: Constraint Satisfaction Problem (CSP) Solver
+Pada Milestone 02, MnemoLib mengimplementasikan **Constraint Satisfaction Problem (CSP)** untuk memecahkan sub-masalah keputusan bisnis terikat batasan (*resource & pipeline activation constraints*).
+- **Pemodelan Formal**: $\langle X, D, C \rangle$ dengan batasan uniter (fitur kueri), batasan biner dependensi ($X_3 \implies X_2$), dan batasan global kuota kapasitas.
+- **Propagasi Batasan AC-3**: Memangkas domain inkonsisten sebelum dan selama pencarian untuk deteksi dini kegagalan.
+- **Backtracking Search dengan MRV**: Heuristik *Minimum Remaining Values* untuk meminimalkan *branching factor*.
+
+Implementasi:
+```text
+src/mnemolib/search/csp/
+├── __init__.py
+├── constraints.py
+├── ac3.py
+├── mrv.py
+└── solver.py
+```
+
 ---
 
-# 8. Repository Structure
-
-Struktur repository MnemoLib:
+# 8. Struktur Repositori
 
 ```text
 mnemolib/
-
 ├── README.md
 ├── LICENSE
 ├── pyproject.toml
-├── uv.lock
-
+│
 ├── docs/
-│   └── milestone-01/
-│       ├── problem-framing.md
-│       ├── peas.md
-│       └── state-space.md
-
+│   ├── milestone-01/
+│   │   ├── problem-framing.md
+│   │   ├── peas.md
+│   │   └── state_space.md
+│   └── milestone-02/
+│       ├── csp-model.md              # Pemodelan matematis formal X, D, C
+│       ├── algorithm.md              # Penjelasan AC-3, MRV & Backtracking
+│       ├── testing.md                # Matriks pengujian & kasus ekstrem (21 tests)
+│       ├── sensitivity-analysis.md   # Benchmark empiris skala & konvergensi
+│       └── integration.md            # Integrasi UCS (M1) -> CSP (M2)
+│
+├── scripts/
+│   ├── benchmark.py                  # Skrip benchmark empiris modul CSP
+│   └── benchmark_scaling.py          # Skrip uji skalabilitas (N=8 s.d. 256)
+│
 ├── src/
 │   └── mnemolib/
-│       ├── __init__.py
+│       ├── __init__.py               # CLI terpadu MnemoLib
+│       ├── __main__.py               # Entrypoint modul
 │       └── search/
 │           ├── __init__.py
-│           ├── ucs.py
-│           └── mnemolib_graph.py
-
+│           ├── ucs.py                # Algoritma UCS (Milestone 01)
+│           ├── mnemolib_graph.py     # Graf ruang keadaan
+│           └── csp/                  # Modul CSP (Milestone 02)
+│               ├── __init__.py
+│               ├── constraints.py    # Definisi X, D, C & batasan
+│               ├── ac3.py            # Propagasi konsistensi busur
+│               ├── mrv.py            # Heuristik MRV
+│               └── solver.py         # Solver Backtracking terintegrasi
+│
 └── tests/
-    └── test_ucs.py
+    ├── test_ucs.py                   # Unit test UCS (5 kasus uji)
+    └── test_csp.py                   # Unit test CSP & Edge cases (16 kasus uji)
 ```
 
 ---
@@ -243,26 +272,36 @@ mnemolib/
 
 ```bash
 git clone https://github.com/LauraSirumapea/mnemolib.git
-
 cd mnemolib
 ```
 
-## Install Dependency
+## Install Dependency & Mode Editable
 
 ```bash
+pip install -e .
+# Atau jika menggunakan astral uv:
 uv sync
 ```
 
-## Jalankan Testing
+## Menjalankan Automated Testing (Pytest)
 
 ```bash
-uv run pytest -v
+pytest -v
+# Menjalankan seluruh 21 unit test (UCS + CSP Edge Cases)
 ```
 
-## Jalankan Demo
+## Menjalankan Analisis Sensitivitas & Benchmark
 
 ```bash
-uv run mnemolib
+python scripts/benchmark_scaling.py
+```
+
+## Menjalankan Demo Interaktif (CLI)
+
+```bash
+python -m mnemolib
+# atau
+mnemolib
 ```
 
 ---

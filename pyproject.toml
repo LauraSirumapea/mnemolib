@@ -1,6 +1,6 @@
 [project]
 name = "mnemolib"
-version = "0.1.0"
+version = "0.2.0"
 authors = [
     { name = "Laura Sirumapea", email = "lauraawise07@gmail.com" },
     { name = "Desnita Pardosi", email = "desnitapardosi@gmail.com" },
@@ -21,3 +21,7 @@ build-backend = "uv_build"
 dev = [
     "pytest>=9.1.1",
 ]
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
+testpaths = ["tests"]
