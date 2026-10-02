@@ -1,6 +1,7 @@
 """Minimum Remaining Values (MRV) heuristic for MnemoLib CSP."""
 
 
+
 def select_unassigned_variable(assignment, domains):
     """
     Select an unassigned variable using the
