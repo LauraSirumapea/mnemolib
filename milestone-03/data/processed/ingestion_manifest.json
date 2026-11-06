@@ -1,7 +1,10 @@
 {
   "documents": 12,
-  "chunks": 37,
-  "collection": "mnemolib_library_sop",
+  "chunks": 49,
+  "collection": "mnemolib_milestone3_hybrid",
+  "embedding_model": "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2",
+  "chunk_size_words": 140,
+  "chunk_overlap_words": 30,
   "sources": [
     "LAYANAN-JURNAL-DAN-MAJALAH-CETAK.pdf",
     "LAYANAN-KEANGGOTAAN.pdf",

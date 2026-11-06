@@ -1,0 +1,17 @@
+﻿
+query_id,category,query,expected_doc
+Q01,in_domain,Bagaimana prosedur mencari dan mengakses jurnal ilmiah?,LAYANAN-JURNAL-DAN-MAJALAH-CETAK.pdf
+Q02,in_domain,Apa persyaratan untuk menjadi anggota perpustakaan?,LAYANAN-KEANGGOTAAN.pdf
+Q03,in_domain,Saya ingat dokumen tentang penerimaan karya ilmiah mahasiswa.,PELAYANAN-PENERIMAAN-TUGAS-AKHIR.pdf
+Q04,in_domain,Bagaimana cara mencari koleksi referensi?,LAYANAN-REFERENSI-DAN-BI-CORNER.pdf
+Q05,in_domain,Bagaimana prosedur peminjaman buku?,PELAYANAN-PEMINJAMAN-MANUAL.pdf
+Q06,in_domain,Bagaimana proses pengembalian buku?,LAYANAN-PENGEMBALIAN-MANDIRI.pdf
+Q07,in_domain,Bagaimana mencari informasi tentang koleksi lokal atau tugas akhir?,LAYANAN-LOKAL-KONTEN.pdf
+Q08,in_domain,Saya ingin mengetahui layanan keterlambatan buku.,LAYANAN-KETERLAMBATAN-BUKU.pdf
+Q09,in_domain,Di mana saya bisa mendapatkan bantuan penelusuran informasi?,SOP-PELAYANAN-INFORMASI-PEMUSTAKA.pdf
+Q10,in_domain,Bagaimana prosedur layanan informasi pemustaka?,SOP-PELAYANAN-INFORMASI-PEMUSTAKA.pdf
+Q11,ood,Bagaimana cara memperbaiki mesin kendaraan?,
+Q12,ood,Berapa harga tiket pesawat ke Jepang?,
+Q13,ood,Bagaimana resep membuat rendang?,
+Q14,ood,Siapa pemenang pertandingan sepak bola tadi malam?,
+Q15,ood,Bagaimana cara menghitung pajak kendaraan bermotor?,
